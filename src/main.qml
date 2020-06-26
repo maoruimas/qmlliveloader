@@ -14,21 +14,29 @@ ApplicationWindow {
     height: 480
     title: qsTr("Qml Live Loader")
 
+    property bool firstLoad: true
     property int loadItemX
     property int loadItemY
 
     function load(full) {
+        if (loader.status === Loader.Loading) {
+            console.log("<font color='red'>Fail to load as loader is busy</font>")
+            return
+        }
+
         if (full) {
             consoleArea.clear()
             $FileWatcher.setPath(pathInput.text)
         }
-        if (!full) {
+        console.log("<font color='blue'>Loading...</font>")
+        if (loader.status === Loader.Ready) {
+            firstLoad = false
             loadItemX = loader.item.x
             loadItemY = loader.item.y
         }
         loader.source = ""
         $QmlEngine.clearCache()
-        if (full) {
+        if (firstLoad) {
             loader.setSource(pathInput.text, {"flags": flags})
         } else {
             loader.setSource(pathInput.text, {"flags": flags, "x": loadItemX, "y": loadItemY})
@@ -37,12 +45,8 @@ ApplicationWindow {
 
     Connections {
         target: $FileWatcher
-        onFileChanged: {
-            console.log("<font color='red'>File changed</font>")
-            load(false)
-        }
-        onDirectoryChanged: {
-            console.log("<font color='red'>Directory changed</font>")
+        onUpdate: {
+            console.log("<font color='purple'>File changes captured</font>")
             load(false)
         }
         onMessage: {
@@ -53,6 +57,7 @@ ApplicationWindow {
     Loader {
         id: loader
         asynchronous: true
+        onLoaded: console.log("<font color='green'>Loaded</font>")
     }
 
     ColumnLayout {

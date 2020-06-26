@@ -1,12 +1,20 @@
 #include <QQmlFile>
 #include <QFileInfo>
 #include <QDir>
+#include <QTimer>
 #include "myfilewatcher.h"
 
 MyFileWatcher::MyFileWatcher(QObject *parent)
-    : QFileSystemWatcher(parent)
+    : QFileSystemWatcher(parent), timer(new QTimer(this))
 {
-
+    timer->setInterval(500);
+    timer->setSingleShot(true);
+    connect(timer, &QTimer::timeout, this, &MyFileWatcher::update);
+    connect(this, &MyFileWatcher::directoryChanged, this, [=](const QString& path) {
+        if (!timer->isActive()) {
+            timer->start();
+        }
+    });
 }
 
 void MyFileWatcher::setPath(const QUrl &url)

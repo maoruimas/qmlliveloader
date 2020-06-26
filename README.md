@@ -1,37 +1,5 @@
-# Qml Live Loader
+以往怕麻烦的我一直在用Felgo自带的Felgo Live做QML实时预览, 不过Felgo虽好, 但强制增加~5秒的启动页面实在太恶心, 更何况Felgo更新慢 (似乎至今还是Qt 13? 不太清楚), 于是决定自己做一个, 本来也没有什么技术含量.
 
-#### 介绍
-Custom Qml live loader
+![](https://images.gitee.com/uploads/images/2020/0626/171953_cd77cbd1_5488222.gif)
 
-#### 软件架构
-软件架构说明
-
-
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 码云特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+[Live Reloading or Hot Reloading with QML - qml.guide](https://qml.guide/live-reloading-hot-reloading-qml/)

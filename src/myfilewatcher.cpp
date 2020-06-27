@@ -48,6 +48,6 @@ void MyFileWatcher::setPath(const QUrl &url)
     if (addPath(dirPath)) {
         qInfo() << dirPath << "is under watch";
     } else {
-        qInfo() << "Fail to put" << dirPath << "under watch";
+        qWarning() << "Fail to put" << dirPath << "under watch";
     }
 }

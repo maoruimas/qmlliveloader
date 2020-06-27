@@ -13,7 +13,6 @@ public:
     Q_INVOKABLE void setPath(const QUrl& url);
 
 signals:
-    void message(QString msg);
     void update();
 
 private:

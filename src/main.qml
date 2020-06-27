@@ -28,7 +28,7 @@ ApplicationWindow {
             consoleArea.clear()
             $FileWatcher.setPath(pathInput.text)
         }
-        console.log("<font color='blue'>Loading...</font>")
+        console.log("Loading...")
         if (loader.status === Loader.Ready) {
             firstLoad = false
             loadItemX = loader.item.x
@@ -46,11 +46,8 @@ ApplicationWindow {
     Connections {
         target: $FileWatcher
         onUpdate: {
-            console.log("<font color='purple'>File changes captured</font>")
+            console.log("<font color='blue'>Directory changes captured</font>")
             load(false)
-        }
-        onMessage: {
-            console.log("<font color='gray'>" + msg + "</font>")
         }
     }
 

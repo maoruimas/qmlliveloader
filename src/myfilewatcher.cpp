@@ -4,6 +4,8 @@
 #include <QTimer>
 #include "myfilewatcher.h"
 
+#include <QDebug>
+
 MyFileWatcher::MyFileWatcher(QObject *parent)
     : QFileSystemWatcher(parent), timer(new QTimer(this))
 {
@@ -19,29 +21,33 @@ MyFileWatcher::MyFileWatcher(QObject *parent)
 
 void MyFileWatcher::setPath(const QUrl &url)
 {
+    QStringList fileList = files();
+    if (!fileList.isEmpty()) {
+        fileList = removePaths(fileList);
+        if (!fileList.isEmpty()) {
+            qWarning() << "Fail to unwatch files:" << fileList;
+        }
+    }
+    QStringList dirList = directories();
+    if (!dirList.isEmpty()) {
+        dirList = removePaths(dirList);
+        if (!dirList.isEmpty()) {
+            qWarning() << "Fail to unwatch directories:" << dirList;
+        }
+    }
+
     QString path = QQmlFile::urlToLocalFileOrQrc(url);
     QFileInfo info(path);
     if (!info.isFile()) {
-        emit message(tr("Not a file"));
+        qWarning() << "Not a file or not local";
         return;
     }
 
     QString dirPath = path.left(path.lastIndexOf('/'));
-    emit message(tr("Directory to be watched: ") + dirPath);
 
-    QStringList dirsUnderWatch = directories();
-    bool succeeded = true;
-
-    if (dirsUnderWatch.isEmpty()) {
-        succeeded = addPath(dirPath);
-    } else if(dirPath != dirsUnderWatch[0]) {
-        removePaths(dirsUnderWatch);
-        succeeded = addPath(dirPath);
-    }
-
-    if (succeeded) {
-        emit message(tr("Directory is under watch"));
+    if (addPath(dirPath)) {
+        qInfo() << dirPath << "is under watch";
     } else {
-        emit message(tr("Fail to put the directory under watch"));
+        qInfo() << "Fail to put" << dirPath << "under watch";
     }
 }

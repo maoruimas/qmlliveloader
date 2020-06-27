@@ -13,6 +13,9 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 {
     if (consoleArea) {
         QString temp = msg;
+        if (type == QtWarningMsg || type == QtCriticalMsg || type == QtFatalMsg) {
+            temp = "<font color='red'>" + temp + "</font>";
+        }
         QMetaObject::invokeMethod(consoleArea, "append", Q_ARG(QString, temp));
     }
 }

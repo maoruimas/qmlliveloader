@@ -8,7 +8,7 @@
 
 注意, 发布程序时应链接所有Qml module, 以Windows为例
 ```cmd
-windeployqt D:\QtRepository\qmlliveloader\win-deploy -qmldir D:\Qt\5.15.0\mingw81_64\qml
+windeployqt    D:\QtRepository\qmlliveloader\win-deploy -qmldir D:\Qt\5.15.0\mingw81_64\qml
 ```
 
 # TODO
@@ -30,30 +30,45 @@ qmlliveengine.cpp
 live.qml
 ```
 2. 修改 main.cpp
+Qt Creator 默认生成的 main.cpp 内容为
 ```cpp
-...
+#include <QGuiApplication>
 #include <QQmlApplicationEngine>
-...
+
 int main(int argc, char *argv[])
 {
-    ...
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QGuiApplication app(argc, argv);
+
     QQmlApplicationEngine engine;
-    ...
+    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+                     &app, [url](QObject *obj, const QUrl &objUrl) {
+        if (!obj && url == objUrl)
+            QCoreApplication::exit(-1);
+    }, Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
 }
 ```
-改为
+`QmlLiveEngine` 继承自 `QQmlApplicationEngine`, 因此可以直接将 `QQmlApplicationEngine` 替换为 `QmlLiveEngine`.
+要使用 Live, 需要启用 hot load, 并且必须用绝对路径而不是 qrc 链接:
 ```cpp
-...
-#include <QQmlContext>
+#include <QGuiApplication>
 #include "qmlliveengine.h"
-...
+
 int main(int argc, char *argv[])
 {
-    ...
-    QQmlApplicationEngine engine;
-    engine.watch("path/to/project/src", "main.qml");
-    engine.rootContext()->setContextProperty("$QmlLiveEngine", &engine);
-    ...
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QGuiApplication app(argc, argv);
+
+    QmlLiveEngine engine;
+    engine.hotLoad("/path/to/main.qml");
+
+    return app.exec();
 }
 ```
 代码作为 Qml live loader 的发行版存于[码云](https://gitee.com/maoruimas/qmlliveloader/releases/0.0.1).

@@ -30,6 +30,7 @@ qmlliveengine.cpp
 live.qml
 ```
 2. 修改 main.cpp
+
 Qt Creator 默认生成的 main.cpp 内容为
 ```cpp
 #include <QGuiApplication>
@@ -54,6 +55,7 @@ int main(int argc, char *argv[])
 }
 ```
 `QmlLiveEngine` 继承自 `QQmlApplicationEngine`, 因此可以直接将 `QQmlApplicationEngine` 替换为 `QmlLiveEngine`.
+
 要使用 Live, 需要启用 hot load, 并且必须用绝对路径而不是 qrc 链接:
 ```cpp
 #include <QGuiApplication>
@@ -71,4 +73,11 @@ int main(int argc, char *argv[])
     return app.exec();
 }
 ```
+这里假定所有 qml 文件都在主 qml 文件所在的文件夹及其子文件夹中, 并且 live.qml 和主 qml 文件处于同级文件夹中.
+
+另外, 由于 Qt Creator 自带的输出窗口显示效果不好, Live engine 默认将 console message 重定向至 live 窗口. 要使用自带的输出窗口, 只需要改为:
+```cpp
+engine.hotLoad("/path/to/main.qml", false);
+```
+
 代码作为 Qml live loader 的发行版存于[码云](https://gitee.com/maoruimas/qmlliveloader/releases/0.0.1).
